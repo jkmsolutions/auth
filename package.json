@@ -1,6 +1,6 @@
 {
     "name": "@jkmsolutions/auth",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "description": "Common auth methods used in JKM Core microservices environment.",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
