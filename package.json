@@ -22,9 +22,11 @@
     "homepage": "https://github.com/jkmsolutions/auth#readme",
     "devDependencies": {
         "@types/express": "^4.17.21",
+        "@types/jsonwebtoken": "^9.0.6",
         "typescript": "^5.6.2"
     },
     "dependencies": {
-        "express": "^4.21.0"
+        "express": "^4.21.0",
+        "jsonwebtoken": "^9.0.2"
     }
 }
