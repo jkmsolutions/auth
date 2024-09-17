@@ -29,3 +29,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     next();
 }
+
+export const decodeToken = (token: string): any => {
+    return jwt.verify(token, process.env.JWT_SECRET as string);
+}
