@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 
 export interface Session {
     jwt?: string;
     refreshToken?: string;
+}
+
+export interface DecodedToken {
+    steamid64: string;
 }
 
 declare global {
@@ -21,15 +25,18 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET as string);
+    try {
+        jwt.verify(token, process.env.JWT_SECRET as string);
+        next();
+    } catch (err) {
+        if (err instanceof TokenExpiredError) {
+            return res.status(401).json({ message: 'Token expired' });
+        }
 
-    if (!verified) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
+};
 
-    next();
-}
-
-export const decodeToken = (token: string): any => {
-    return jwt.verify(token, process.env.JWT_SECRET as string);
+export const decodeToken = (token: string): DecodedToken => {
+    return jwt.decode(token) as DecodedToken;
 }
