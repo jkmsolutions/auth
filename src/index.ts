@@ -27,6 +27,10 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     try {
         jwt.verify(token, process.env.JWT_SECRET as string);
+        const { steamid64 } = decodeToken(token);
+        if (!steamid64) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
         next();
     } catch (err) {
         if (err instanceof TokenExpiredError) {
