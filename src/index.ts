@@ -18,26 +18,30 @@ declare global {
     }
 }
 
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const token = req.session?.jwt;
 
     if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: 'Unauthorized' });
+        return;
     }
 
     try {
         jwt.verify(token, process.env.JWT_SECRET as string);
         const { steamid64 } = decodeToken(token);
         if (!steamid64) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
         }
         next();
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            return res.status(401).json({ message: 'Token expired' });
+            res.status(401).json({ message: 'Token expired' });
+            return;
         }
 
-        return res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: 'Unauthorized' });
+        return;
     }
 };
 
